@@ -11,6 +11,7 @@ const Table = ({movieIndex,SetLoading, loading}) => {
   const unique_id = uuid();
   const [loader, setLoader] = useState([])
   const [filteredArray, setFilteredArray] = useState([])
+  const [sortedArray, setSortedArray] = useState([])
   
 
 
@@ -30,6 +31,7 @@ const Table = ({movieIndex,SetLoading, loading}) => {
         axios.all(stuff.map((endpoint) => axios.get(endpoint))).then(
             (data) => (
                 setLoader(data),
+                console.log(data),
                 SumOfHeight(loader)
             )
         )
@@ -53,6 +55,13 @@ const Table = ({movieIndex,SetLoading, loading}) => {
   const handleFilterOption = (inputArray) =>{
     setFilteredArray(inputArray)
   }
+
+  // handle sorting
+  const handleSorting = () =>{
+    let newArray = loader.sort((a, b) => (a.data.name > b.data.name) ? 1 : -1)
+    setSortedArray(newArray)
+    console.log(newArray)
+  }
   return (
     <div className='flex flex-col justify-center w-full h-full p-4'>
         {
@@ -67,12 +76,12 @@ const Table = ({movieIndex,SetLoading, loading}) => {
             
         }
         {
-            loader.length > 0 && filteredArray.length === 0 &&
+            loader.length > 0 && filteredArray.length === 0 && sortedArray.length === 0 &&
             <div className='w-[90%] h-[80%] mx-auto rounded-lg bg-black border-2 border-[#FDE309] overflow-auto p-4'>
-                <FilterGender characters={loader} handleFilterOption={handleFilterOption}/>
+                <FilterGender characters={loader} handleFilterOption={handleFilterOption} setSortedArray={setSortedArray}/>
                 <div className='flex flex-col justify-center space-y-5'>    
                     <div className='font-bold text-xl flex justify-around w-[100%] text-[#FDE309]'>
-                        <h1>Name</h1>
+                        <h1 onClick={handleSorting} className="cursor-pointer">Name</h1>
                         <h1>Gender</h1>
                         <h1>Height</h1>
                     </div>
@@ -123,10 +132,10 @@ const Table = ({movieIndex,SetLoading, loading}) => {
         {
             filteredArray.length > 0 &&
             <div className='w-[90%] h-[80%] mx-auto rounded-lg bg-black border-2 border-[#FDE309] overflow-auto'>
-                <FilterGender characters={loader} handleFilterOption={handleFilterOption}/>
+                <FilterGender characters={loader} handleFilterOption={handleFilterOption} setSortedArray={setSortedArray}/>
                 <div className='flex flex-col justify-center space-y-5'>    
                     <div className='font-bold text-xl flex justify-around w-[100%] text-[#FDE309]'>
-                        <h1>Name</h1>
+                        <h1 className="cursor-pointer">Name</h1>
                         <h1>Gender</h1>
                         <h1>Height</h1>
                     </div>
@@ -173,7 +182,59 @@ const Table = ({movieIndex,SetLoading, loading}) => {
                 </div>
             </div>
         }
-        
+        {
+            sortedArray.length > 0 && 
+            <div className='w-[90%] h-[80%] mx-auto rounded-lg bg-black border-2 border-[#FDE309] overflow-auto'>
+                <FilterGender characters={loader} handleFilterOption={handleFilterOption} setSortedArray={setSortedArray} />
+                <div className='flex flex-col justify-center space-y-5'>    
+                    <div className='font-bold text-xl flex justify-around w-[100%] text-[#FDE309]'>
+                        <h1 onClick={handleSorting} className="cursor-pointer">Name</h1>
+                        <h1>Gender</h1>
+                        <h1>Height</h1>
+                    </div>
+                
+                    { 
+                        sortedArray.map(v => (
+                            <div className='flex justify-around' key={unique_id.slice(0,100)}>
+                                <div className="flex justify-center w-[20%]">
+                                    {v.data.name}
+                                </div>
+                                <div className="flex justify-center w-[20%] text-xl">
+                                    {
+                                        v.data.gender == "male" &&
+                                        <div className='flex items-center'>
+                                            <BiMale />
+                                            <span>M</span>
+                                        </div>
+                                        
+                                    }
+                                    {
+                                        v.data.gender == "female" &&
+                                        <div className='flex items-center'>
+                                            <FaFemale />
+                                            <span>F</span>
+                                        </div>
+                                    }
+                                    {
+                                        v.data.gender !== "female" && v.data.gender !== "male" &&
+                                        v.data.gender
+                                    }
+                                </div>
+                                <div className="flex justify-center w-[20%]">
+                                    {v.data.height}
+                                </div>
+                            </div>
+                            
+                        ))
+                    }
+                    <div className='flex justify-around text-center text-[#FDE309] text-xl font-bold'>
+                        <h1>Sum of heights</h1>
+                        <h1></h1>
+                        <h1>{SumOfHeight(loader)}cm ({convertCmTOFeet(SumOfHeight(loader))}) feets</h1>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
   )
 }

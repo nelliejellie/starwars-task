@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Select from 'react-select';
 
-const FilterGender = ({characters,handleFilterOption}) => {
+const FilterGender = ({characters,handleFilterOption,setSortedArray}) => {
   const [selectedOption, setSelectedOption] = useState(null);
 
   const customStyles = {
@@ -23,6 +23,7 @@ const FilterGender = ({characters,handleFilterOption}) => {
 
   const handleProps = (selectedOption) =>{
     setSelectedOption(selectedOption)
+    setSortedArray([])
     var newArray = characters.filter(val => val.data.gender === selectedOption.value)
     handleFilterOption(newArray)
   }
