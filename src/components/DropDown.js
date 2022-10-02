@@ -20,7 +20,7 @@ export default function DropDown({movieTitle,handleSelectedOption}) {
     console.log(selectedOption)
   }
   return (
-    <div className="text-black font-semibold w-[20%] m-auto">
+    <div className="text-black font-semibold w-[20%] m-auto md:w-[70%]">
       <Select
         styles={customStyles}
         placeholder="Choose a starwars movie"

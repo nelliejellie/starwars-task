@@ -4,17 +4,22 @@ import { v4 as uuid } from 'uuid'
 import {BiMale} from "react-icons/bi"
 import {FaFemale} from "react-icons/fa"
 import FilterGender from './FilterGender';
+import BounceLoader from 'react-spinners/BounceLoader';
 
-const Table = ({movieIndex}) => {
-  console.log(movieIndex)
+
+const Table = ({movieIndex,SetLoading, loading}) => {
   const unique_id = uuid();
   const [loader, setLoader] = useState([])
   const [filteredArray, setFilteredArray] = useState([])
+  
+
+
   useEffect(() =>{
     setLoader([])
     setFilteredArray([])
     axios.get(`https://swapi.dev/api/films/${movieIndex}`).then((res)=>{
         console.log(res.data.characters)
+        SetLoading(current => false)
         handleArrays(res.data.characters)
     })
   },[movieIndex])
@@ -49,10 +54,21 @@ const Table = ({movieIndex}) => {
     setFilteredArray(inputArray)
   }
   return (
-    <div className='flex flex-col justify-center w-full h-full'>
+    <div className='flex flex-col justify-center w-full h-full p-4'>
+        {
+            loading &&
+            <div className='mx-auto'>
+                <BounceLoader
+                    size={150}
+                    color={"#FDE309"}
+                    loading={loading}
+                />
+            </div>
+            
+        }
         {
             loader.length > 0 && filteredArray.length === 0 &&
-            <div className='w-[90%] h-[80%] mx-auto rounded-lg bg-black border-2 border-[#FDE309] overflow-auto'>
+            <div className='w-[90%] h-[80%] mx-auto rounded-lg bg-black border-2 border-[#FDE309] overflow-auto p-4'>
                 <FilterGender characters={loader} handleFilterOption={handleFilterOption}/>
                 <div className='flex flex-col justify-center space-y-5'>    
                     <div className='font-bold text-xl flex justify-around w-[100%] text-[#FDE309]'>

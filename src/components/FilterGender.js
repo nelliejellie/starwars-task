@@ -27,7 +27,7 @@ const FilterGender = ({characters,handleFilterOption}) => {
     handleFilterOption(newArray)
   }
   return (
-    <div className="text-black font-semibold w-[20%] relative left-[80%]">
+    <div className="text-black font-semibold w-[20%] relative left-[80%] md:w-[70%] md:left-[30%]">
         <Select
             styles={customStyles}
             placeholder="Filter by gender"

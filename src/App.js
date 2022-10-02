@@ -14,6 +14,8 @@ function App() {
   const [selectedMovie, setSelectedMovie] = useState({})
   const [endpoints, setEndpoints] = useState(null)
   const [movieIndex, setMovieIndex] = useState(0)
+  const [loading, SetLoading] = useState(false)
+  
 
   useEffect(()=>{
     console.log("sending request.....")
@@ -40,8 +42,7 @@ function App() {
     var movieObject = movieArray.find(m => m.title === value.value)
     setSelectedMovie(movieObject)
     setMovieIndex(movieArray.findIndex(m => m.title === value.value) + 1) 
-    console.log(movieIndex)
-    console.log(selectedMovie)
+    SetLoading(true)
     setEndpoints(selectedMovie.characters)
   }
 
@@ -50,7 +51,7 @@ function App() {
     <div className="cont text-white">
       <DropDown movieTitle={movieTitle} handleSelectedOption={handleSelectedOption}/>
       <marquee className="crawl text-center m-4 text-lg">{selectedMovie.opening_crawl}</marquee>
-      <Table movieIndex={movieIndex}/>
+      <Table movieIndex={movieIndex} SetLoading={SetLoading} loading={loading}/>
     </div>
   );
 }
